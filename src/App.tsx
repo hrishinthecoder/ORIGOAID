@@ -93,7 +93,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner position="top-right" />
-      <BrowserRouter basename="/origoaid-bangladesh">
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "") || "/"}>
         <Suspense fallback={<PageLoader />}>
           <RouteTree />
         </Suspense>

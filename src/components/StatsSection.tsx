@@ -17,8 +17,8 @@ function CountUp({ value, suffix = "", prefix = "" }: { value: number; suffix?: 
     
     const timer = setInterval(() => {
       start += increment;
-      if (start >= end) {
-        setCount(end);
+      if (isNaN(end) || !isFinite(end) || start >= end) {
+        setCount(isNaN(end) ? 0 : end);
         clearInterval(timer);
       } else {
         setCount(start);
@@ -36,9 +36,9 @@ function CountUp({ value, suffix = "", prefix = "" }: { value: number; suffix?: 
 }
 
 export default function StatsSection() {
-  const campaigns = useStore((s) => s.campaigns);
-  const raised = campaigns.reduce((s, c) => s + c.raised, 0);
-  const backers = campaigns.reduce((s, c) => s + (c.backers || 0), 0);
+  const campaigns = useStore((s) => s.campaigns) || [];
+  const raised = Array.isArray(campaigns) ? campaigns.reduce((s, c) => s + (c.raised || 0), 0) : 0;
+  const backers = Array.isArray(campaigns) ? campaigns.reduce((s, c) => s + (c.backers || 0), 0) : 0;
   const [globeRef, globeInView] = useInView<HTMLDivElement>({ rootMargin: "250px" });
 
   const stats = [
@@ -58,7 +58,7 @@ export default function StatsSection() {
       sub: "Active", 
       icon: GlobeIcon,
       color: "from-brand-red/20 to-transparent",
-      iconColor: "text-brand-red",
+      iconColor: "text-brand-ruby",
       suffix: "+"
     },
     { 
